@@ -1,0 +1,80 @@
+# The local container stack (`make up`): PostgreSQL with least-privilege roles, the migration,
+# the app and the retention service. Production: compose.prod.yaml. Optional profiles: `mail`
+# (mailpit) and `otel` (grafana).
+name: infrasales
+
+x-app: &app
+  build: .
+  image: infrasales:local
+  read_only: true
+  tmpfs: [/tmp]
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  restart: unless-stopped
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg18@sha256:c29f30688a9ad961691bdf0ec1650717cc132a5814619d80f80463d6e4c42e47
+    environment:
+      POSTGRES_PASSWORD: postgres # local only: the superuser, never used by the app
+    ports: ["127.0.0.1:5432:5432"]
+    volumes:
+      - postgres:/var/lib/postgresql
+      - ./compose/postgres-init.sh:/docker-entrypoint-initdb.d/10-roles.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d infrasales"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  migrate: # the schema owner: migrates, grants the other roles, exits
+    <<: *app
+    command: migrate
+    restart: "no"
+    environment:
+      DATABASE_URL: postgresql+psycopg://infrasales_owner:owner@postgres/infrasales
+      DATABASE_APP_ROLE: infrasales_app
+      DATABASE_RETENTION_ROLE: infrasales_retention
+    depends_on:
+      postgres: { condition: service_healthy }
+
+  web: # the API, the UI and the scheduler worker
+    <<: *app
+    env_file: profiles/${PROFILE:-stack}.env # copied from its .example: `make profiles`
+    environment:
+      DATABASE_URL: postgresql+psycopg://infrasales_app:app@postgres/infrasales
+    volumes: [sink:/data/sink] # consumers mount it read-only (:ro)
+    ports: ["127.0.0.1:8000:8000"]
+    stop_grace_period: 45s # requests drain, a job finishes or is handed back, telemetry flushes
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  retention: # deletes expired data daily, with a role that can do little else
+    <<: *app
+    command: [prune, --every, 24h]
+    healthcheck: { disable: true } # the image's probe is for `web`
+    environment:
+      DATABASE_URL: postgresql+psycopg://infrasales_retention:retention@postgres/infrasales
+      SINK__URI: file:///data/sink
+      RETENTION__AUDIT_DAYS: 180
+      RETENTION__JOB_RUN_DAYS: 90
+      RETENTION__SOURCE_DAYS: 365 # Source Versions, after they stopped being current
+    volumes: [sink:/data/sink]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  mailpit: # optional SMTP catcher (mailpit:1025; from the host: localhost:2525), UI on :8025
+    image: axllent/mailpit:v1.31.4@sha256:b68349e3a014b90c5610bfb26b2ae36f3892d7b8cf25ee140c6c71c98d2fcf48
+    profiles: [mail]
+    ports: ["127.0.0.1:2525:1025", "127.0.0.1:8025:8025"]
+
+  grafana: # optional OpenTelemetry backend for trying it out: OTLP/HTTP on grafana:4318 (from
+    # the host: localhost:4318), Grafana on :3000 with traces (Tempo), logs (Loki) and metrics
+    # (Prometheus), no sign-in. Keeps nothing once removed (make down).
+    image: grafana/otel-lgtm:0.35.0@sha256:2de1094c593c671cbfca878a28ffcd7e46ff5e32f2ce966c0cf33003f6cf4266
+    profiles: [otel]
+    ports: ["127.0.0.1:3000:3000", "127.0.0.1:4318:4318"]
+
+volumes:
+  postgres:
+  sink: # owned by the app's user (Dockerfile)

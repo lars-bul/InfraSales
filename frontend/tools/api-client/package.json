@@ -1,0 +1,15 @@
+{
+  "name": "api-client",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Generates the UI's API client (src/client) from openapi.json. A package of its own: the generator needs the TypeScript 5/6 compiler API, the UI type-checks with TypeScript 7.",
+  "type": "module",
+  "scripts": {
+    "generate": "openapi-ts",
+    "check": "node check.ts"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "0.99.0",
+    "typescript": "6.0.3"
+  }
+}

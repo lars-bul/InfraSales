@@ -1,0 +1,4 @@
+# pnpm settings for the UI and its build tools.
+packages:
+  - tools/* # tools needing dependencies of their own
+minimumReleaseAge: 10080 # supply-chain cooldown: ignore releases younger than a week

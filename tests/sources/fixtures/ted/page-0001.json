@@ -1,0 +1,365 @@
+{
+ "notices": [
+  {
+   "contract-duration-start-date-lot": [
+    "2025-01-01+01:00"
+   ],
+   "notice-type": "can-standard",
+   "publication-number": "687751-2023",
+   "main-classification-lot": [
+    "09323000"
+   ],
+   "winner-country": [
+    "DEU"
+   ],
+   "result-lot-identifier": [
+    "LOT-0000"
+   ],
+   "procedure-identifier": "6d9adca6-1938-4b3f-8d43-9d72c09f7b68",
+   "buyer-country-sub": [
+    "DE21D"
+   ],
+   "place-of-performance-city-lot": [
+    "Oberammergau"
+   ],
+   "winner-identifier": [
+    "0"
+   ],
+   "place-of-performance-post-code-lot": [
+    "82487"
+   ],
+   "publication-date": "2023-11-13Z",
+   "received-submissions-type-code": [
+    "t-esubm"
+   ],
+   "contract-nature-main-proc": "supplies",
+   "identifier-lot": [
+    "LOT-0000"
+   ],
+   "buyer-post-code": [
+    "82487"
+   ],
+   "contract-duration-end-date-lot": [
+    "2044-12-31+01:00"
+   ],
+   "buyer-city": {
+    "mul": [
+     "Oberammergau"
+    ]
+   },
+   "place-of-performance": [
+    "DE21D",
+    "DEU",
+    "DE21D",
+    "DEU"
+   ],
+   "title-proc": {
+    "deu": "Ausschreibung der Wärmelieferung für kommunale Liegenschaften"
+   },
+   "place-of-performance-subdiv-lot": [
+    "DE21D"
+   ],
+   "winner-city": [
+    "Oberammergau"
+   ],
+   "award-criterion-type-lot": [
+    "price"
+   ],
+   "framework-agreement-lot": [
+    "none"
+   ],
+   "dispatch-date": "2023-11-10+01:00",
+   "buyer-legal-type": [
+    "body-pl-la"
+   ],
+   "received-submissions-type-val": [
+    "1"
+   ],
+   "tender-value": [
+    "563917.20"
+   ],
+   "description-lot": {
+    "deu": [
+     "Die Gemeinde Oberammergau schreibt umweltfreundliche Wärme für fünf gemeindeeigene Liegenschaften aus: Bauhof, Feuerwehrhaus, Wohn- und Geschäftshäuser. Der jährliche Endenergiebedarf beträgt ca. 510 MWh, Lieferzeitraum 20 Jahre. Optional können private Anschlussnehmer versorgt werden, wobei der Auftragnehmer für diese Drittanschlüsse verantwortlich ist. Die Drittanschlüsse sind nicht Gegenstand der Ausschreibung. Die Wärmeversorgung erfolgt über ein eigenverantwortlich zu erstellendes Nahwärmenetz inkl. zentraler Wärmeerzeugungsanlage. Bieter errichten und betreiben alle Anlagen zur Energieerzeugung und -verteilung. Nachweise für Grundstückserwerb/-pacht sind erforderlich. Die Erzeugung hat auf erneuerbarer Energiebasis zu erfolgen, keine fossilen Brennstoffe. Ziel: sichere, kostengünstige, umweltfreundliche Wärmeversorgung."
+    ]
+   },
+   "procedure-type": "open",
+   "classification-cpv": [
+    "09323000",
+    "09323000"
+   ],
+   "buyer-name": {
+    "deu": [
+     "Gemeinde Oberammergau"
+    ]
+   },
+   "winner-post-code": [
+    "82487"
+   ],
+   "winner-name": {
+    "deu": [
+     "Nachwärmeversorung Passionswiese GmbH"
+    ]
+   },
+   "notice-title": {
+    "deu": "Deutschland – Fernwärme – Ausschreibung der Wärmelieferung für kommunale Liegenschaften",
+    "eng": "Germany – District heating – Ausschreibung der Wärmelieferung für kommunale Liegenschaften"
+   },
+   "tender-lot-identifier": [
+    "LOT-0000"
+   ],
+   "title-lot": {
+    "deu": [
+     "Ausschreibung der Wärmelieferung für kommunale Liegenschaften"
+    ]
+   },
+   "buyer-identifier": [
+    "180125"
+   ]
+  },
+  {
+   "contract-duration-start-date-lot": [
+    "2024-02-08+01:00",
+    "2024-02-08+01:00",
+    "2024-02-08+01:00",
+    "2024-02-08+01:00",
+    "2024-02-08+01:00"
+   ],
+   "notice-type": "cn-standard",
+   "publication-number": "675934-2023",
+   "main-classification-lot": [
+    "71300000",
+    "71300000",
+    "71300000",
+    "71300000",
+    "71300000"
+   ],
+   "procedure-identifier": "018ba385-964e-42af-bcf5-484625d60d71",
+   "buyer-country-sub": [
+    "DED2D"
+   ],
+   "publication-date": "2023-11-07Z",
+   "contract-nature-main-proc": "services",
+   "identifier-lot": [
+    "LOT-0001",
+    "LOT-0002",
+    "LOT-0003",
+    "LOT-0004",
+    "LOT-0005"
+   ],
+   "buyer-post-code": [
+    "02708"
+   ],
+   "contract-duration-end-date-lot": [
+    "2027-10-31+01:00",
+    "2027-10-31+01:00",
+    "2027-10-31+01:00",
+    "2027-10-31+01:00",
+    "2027-10-31+01:00"
+   ],
+   "buyer-city": {
+    "mul": [
+     "Löbau"
+    ]
+   },
+   "sme-lot": [
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "lots-max-allowed-proc": "5",
+   "place-of-performance": [
+    "DED2D",
+    "DEU",
+    "DED2D",
+    "DED2D",
+    "DED2D",
+    "DED2D",
+    "DED2D",
+    "DEU",
+    "DEU",
+    "DEU",
+    "DEU",
+    "DEU"
+   ],
+   "title-proc": {
+    "deu": "Maßnahmenverbund zur regenerativen Evolution der Fernwärme in Löbau (Oct0pus)"
+   },
+   "place-of-performance-subdiv-lot": [
+    "DED2D",
+    "DED2D",
+    "DED2D",
+    "DED2D",
+    "DED2D"
+   ],
+   "framework-agreement-lot": [
+    "none",
+    "none",
+    "none",
+    "none",
+    "none"
+   ],
+   "dispatch-date": "2023-11-06+01:00",
+   "buyer-legal-type": [
+    "pub-undert"
+   ],
+   "description-lot": {
+    "deu": [
+     "Grundleistungen nach HOAI Leistungsphasen 1 bis 8 sowie besondere Leistungen: - anlagentechnische Maßnahmen im Bereich der Heiz(kraft)werke außer Elektro- und Steuerungstechnik: zwei Pelletkessel mit je 1.200 kW Heizleistung, Umrüstung des vorhandenen Braunkohlenstaubsilos mit 120 m³ Volumen zur Pelletbevorratung, Installation eines Pelletaustragungssystems (Schnecken- oder Saugsystem) zwischen Behältern und Kesseln, Einbau Ascheaustragungssysteme mit Schnecken und entsprechenden Aschebehältern, je Kessel wird ein abgasseitiger Elektrofilter und ein Saugzuggebläse installiert, Neue Industrieschornsteine inkl. dazugehöriger Verbindungsleitungen und Fundamente - Fundamentplanung für die technischen Anlagen außer Statik (Statik wird vom Auftraggeber gesondert beauftragt) - Abbruch / Rückbau - Fachplanungsleistungen zu Schadstoffen in Objekten - bauordnungsrechtlicher Brandschutz - Zuarbeit zum immissionsschutzrechtlichen Genehmigungsverfahren (BImSchG)",
+     "Grundleistungen nach HOAI Leistungsphasen 1 bis 8 sowie besondere Leistungen: - Sämtliche Elektroinstallationen und Steuerungstechnik im Heizkraftwerk Ost - Netzkabel für späteren Anschluss PV-Anlagen im Fernwärmenetzbereich - fernauslesbare Wärmemengenzähler an Hausanschlussstationen; Datenübertragung perspektivisch durch 450-MHz-Netz für kritische Infrastrukturen; Auswertung über Module mit Künstlicher Intelligenz - Verbrauchsdatenauswertung in Verbindung mit Wettervorhersagen, Nutzerprofilen aus der Vergangenheit, überregionale Energieversorgung und Entfernung zu den Verbrauchern zur Steuerung der Netzversorgung",
+     "Grundleistungen nach HOAI Leistungsphasen 1 bis 8 sowie besondere Leistungen: - Tiefbauplanung für Leistungen Lose 2 und 4 einschl. Wasserhaltung",
+     "Grundleistungen nach HOAI Leistungsphasen 1 bis 8 sowie besondere Leistungen: - Berechnung des Fernwärmenetzes einschl. Speicher und Pumpen - Festlegung von Materialien und Dimensionen - Festlegung des Trassenverlaufes unter Beachtung des unterirdischen Bestandes und Grundstücksgrenzen",
+     "für Lose 1 bis 4: Leistungen gemäß § 2 Leistungsbild Projektsteuerung und Kapitel 3 Kommentar zu den Grundleistungen der Projektsteuerung der Schriftenreihe AHO 09 Projektmanagement in der Bau- und Immobilienwirtschaft (März 2020) für die Projektstufen: 2 Planung, 3 Ausführungsvorbereitung, 4 Ausführung, 5 Projektabschluss jeweils für die Handlungsbereiche A Organisation, Information, Koordination, Dokumentation B Qualitäten und Quantitäten C Kosten und Finanzierung D Termine, Kapazitäten und Logistik E Verträge und Versicherungen Besondere Leistungen gemäß o.g. AHO 09 entsprechend Erfordernissen im laufenden Projekt (Abrechnung nach Tagessätzen) sowie: - Zusammenstellen / Einfordern von Unterlagen gemäß Produktsicherheitsgesetz (EG-Konformitätserklärung - Koordination und Organisation des BImSchG-Verfahrens - Fördermittelabruf, die Erarbeitung von Änderungsanzeigen, Erstellung von Verwendungsnachweisen und Begleitung zu Projekttreffen - Festlegungen zum bauzeitlichen / bauordnungs¬rechtlichen Brandschutz und deren Durchsetzung - Erfüllung der Pflichten nach Baustellenverordnung - Einhaltung, Überwachung und Koordination der erforderlichen Prüfverfahren"
+    ]
+   },
+   "procedure-type": "neg-w-call",
+   "classification-cpv": [
+    "71300000",
+    "71300000",
+    "71300000",
+    "71300000",
+    "71300000",
+    "71300000"
+   ],
+   "buyer-name": {
+    "deu": [
+     "Stadtwerke Löbau GmbH"
+    ]
+   },
+   "notice-title": {
+    "deu": "Deutschland – Dienstleistungen von Ingenieurbüros – Maßnahmenverbund zur regenerativen Evolution der Fernwärme in Löbau (Oct0pus)",
+    "eng": "Germany – Engineering services – Maßnahmenverbund zur regenerativen Evolution der Fernwärme in Löbau (Oct0pus)"
+   },
+   "title-lot": {
+    "deu": [
+     "Anlagentechnik",
+     "Elektro- und Steuerungstechnik",
+     "Tiefbau - Fernwärmenetz",
+     "Fernwärmenetzplanung",
+     "Projektsteuerung"
+    ]
+   },
+   "buyer-identifier": [
+    "DE 140 55 20 91"
+   ]
+  },
+  {
+   "place-of-performance": [
+    "DE212"
+   ],
+   "notice-type": "cn-standard",
+   "publication-number": "436093-2016",
+   "contract-framework-agreement": [
+    false
+   ],
+   "dispatch-date": "2016-12-04Z",
+   "buyer-legal-type": [
+    "body-pl"
+   ],
+   "procedure-type": "open",
+   "classification-cpv": [
+    "45231000",
+    "45232140"
+   ],
+   "buyer-name": {
+    "deu": [
+     "Stadtwerke München GmbH"
+    ]
+   },
+   "publication-date": "2016-12-10+01:00",
+   "notice-title": {
+    "deu": "Deutschland-München: Bauarbeiten für Rohrleitungen, Fernmelde- und Stromleitungen",
+    "eng": "Germany-Munich: Construction work for pipelines, communication and power lines"
+   },
+   "buyer-city": {
+    "deu": [
+     "München"
+    ],
+    "eng": [
+     "Munich"
+    ]
+   }
+  },
+  {
+   "place-of-performance": [
+    "DEG0M"
+   ],
+   "notice-type": "pin-only",
+   "publication-number": "444102-2016",
+   "contract-framework-agreement": [
+    false
+   ],
+   "dispatch-date": "2016-12-13Z",
+   "buyer-legal-type": [
+    "body-pl"
+   ],
+   "total-value": 10700000,
+   "procedure-type": "9",
+   "classification-cpv": [
+    "45231222",
+    "45231300",
+    "45232141",
+    "45232420",
+    "45232421",
+    "45232422"
+   ],
+   "buyer-name": {
+    "deu": [
+     "WABA Wasserversorgungs- und Abwasserentsorgungsbetrieb Altenburg"
+    ]
+   },
+   "publication-date": "2016-12-16+01:00",
+   "notice-title": {
+    "deu": "Deutschland-Altenburg: Bauarbeiten für Wasser- und Abwasserrohrleitungen",
+    "eng": "Germany-Altenburg: Construction work for water and sewage pipelines"
+   },
+   "buyer-city": {
+    "deu": [
+     "Altenburg"
+    ],
+    "eng": [
+     "Altenburg"
+    ]
+   }
+  },
+  {
+   "place-of-performance": [
+    "DEA11"
+   ],
+   "notice-type": "corr",
+   "publication-number": "3797-2017",
+   "contract-framework-agreement": [
+    false
+   ],
+   "dispatch-date": "2017-01-03Z",
+   "buyer-legal-type": [
+    "body-pl"
+   ],
+   "procedure-type": "4",
+   "classification-cpv": [
+    "09323000"
+   ],
+   "buyer-name": {
+    "deu": [
+     "Flughafen Düsseldorf GmbH"
+    ]
+   },
+   "publication-date": "2017-01-05+01:00",
+   "notice-title": {
+    "deu": "Deutschland-Düsseldorf: Fernwärme",
+    "eng": "Germany-Düsseldorf: District heating"
+   },
+   "buyer-city": {
+    "deu": [
+     "Düsseldorf"
+    ],
+    "eng": [
+     "Düsseldorf"
+    ]
+   }
+  }
+ ],
+ "totalNoticeCount": 5
+}

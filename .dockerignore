@@ -1,0 +1,12 @@
+# Allowlist: only what the image is built from; tests/ and profiles/ stay out.
+*
+!pyproject.toml
+!uv.lock
+!README.md
+!src/
+!frontend/
+**/node_modules/
+**/__pycache__/
+frontend/dist/
+frontend/coverage/
+docs/

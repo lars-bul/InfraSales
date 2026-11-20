@@ -1,0 +1,5238 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "InfraSales",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/auth/session": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Read Session",
+        "description": "Who is signed in (if anyone), and how to sign in.",
+        "operationId": "read_session",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Logout",
+        "description": "End the session (a form post); the browser follows the redirect.",
+        "operationId": "logout",
+        "responses": {
+          "303": {
+            "description": "Successful Response"
+          }
+        }
+      }
+    },
+    "/api/audit-events": {
+      "get": {
+        "tags": [
+          "audit"
+        ],
+        "summary": "List Audit Events",
+        "description": "Audit events, newest first; reading them is itself audited: they are personal data.",
+        "operationId": "list_audit_events",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Before"
+            }
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "examples": [
+                "auth.login"
+              ],
+              "title": "Action"
+            }
+          },
+          {
+            "name": "actor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 260
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Actor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuditEventRead"
+                  },
+                  "title": "Response List Audit Events"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/config": {
+      "get": {
+        "tags": [
+          "config"
+        ],
+        "summary": "List Config",
+        "description": "The global configuration: every signed-in user may read it.",
+        "operationId": "list_config",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ConfigEntryRead"
+                  },
+                  "type": "array",
+                  "title": "Response List Config"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/config/{key}": {
+      "put": {
+        "tags": [
+          "config"
+        ],
+        "summary": "Update Config",
+        "description": "Change one setting (admins only) unless it changed since that revision (RFC 9110).\n\nThe change is audited; the response's `ETag` names the new revision.",
+        "operationId": "update_config",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ConfigKey"
+            }
+          },
+          {
+            "name": "if-match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The revision edited, e.g. `\"3\"`",
+              "title": "If-Match"
+            },
+            "description": "The revision edited, e.g. `\"3\"`"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Schedule"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigEntryRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such setting"
+          },
+          "412": {
+            "description": "The setting changed since that revision"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ai": {
+      "get": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "Read Ai Settings",
+        "description": "The connections and models (admins only): whether each key is set, never the key.",
+        "operationId": "read_ai_settings",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AiSettingsRead"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ai/connections/{provider}": {
+      "put": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "Update Ai Connection",
+        "description": "Set a connection's key, or remove it with `null` (admins only); audited without it.",
+        "operationId": "update_ai_connection",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Provider"
+            }
+          },
+          {
+            "name": "if-match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The revision edited, e.g. `\"3\"`",
+              "title": "If-Match"
+            },
+            "description": "The revision edited, e.g. `\"3\"`"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such setting"
+          },
+          "412": {
+            "description": "The setting changed since that revision"
+          },
+          "409": {
+            "description": "No SECRETS_KEY to encrypt the key with"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ai/models": {
+      "put": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "Update Ai Models",
+        "description": "Choose the chat and embedding models (admins only); the next runs use them.",
+        "operationId": "update_ai_models",
+        "parameters": [
+          {
+            "name": "if-match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The revision edited, e.g. `\"3\"`",
+              "title": "If-Match"
+            },
+            "description": "The revision edited, e.g. `\"3\"`"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Models"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelsRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such setting"
+          },
+          "412": {
+            "description": "The setting changed since that revision"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ai/connections/{provider}/models": {
+      "get": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "List Ai Models",
+        "description": "The models a service offers for a purpose (admins only), listed with its stored key.",
+        "operationId": "list_ai_models",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Provider"
+            }
+          },
+          {
+            "name": "purpose",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Purpose"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModelOption"
+                  },
+                  "title": "Response List Ai Models"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The service lists its models for a valid key only"
+          },
+          "502": {
+            "description": "The service did not list its models"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/jobs/runs": {
+      "get": {
+        "tags": [
+          "jobs"
+        ],
+        "summary": "List Job Runs",
+        "description": "Every job's runs, newest first (admins only): of one job, status or trigger if asked.\n\nA full page means older runs may follow: ask again with `before` the last one's ID.",
+        "operationId": "list_job_runs",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/JobStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "trigger",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/RunTrigger"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Trigger"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Before"
+            }
+          },
+          {
+            "name": "job",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/JobName"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Job"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RunHistoryEntry"
+                  },
+                  "title": "Response List Job Runs"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/jobs/runs/activity": {
+      "get": {
+        "tags": [
+          "jobs"
+        ],
+        "summary": "Read Run Activity",
+        "description": "How the runs listed ended over time (admins only): for the Job runs chart.\n\nThe runs the same filters list, scheduled from `start` until `end` (default: the last 7\ncalendar days, today included), counted per hour for up to 2 days, else per calendar day,\nin `timezone` (the client's, an IANA name). Only runs that ended count; \"failed\" means\nfailed for good.",
+        "operationId": "read_run_activity",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/JobStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "trigger",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/RunTrigger"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Trigger"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "examples": [
+                "Europe/Berlin"
+              ],
+              "title": "Timezone"
+            }
+          },
+          {
+            "name": "job",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/JobName"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Job"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunActivity"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "A start after the end, or more than a year between"
+          }
+        }
+      }
+    },
+    "/api/jobs/{job}/runs": {
+      "post": {
+        "tags": [
+          "jobs"
+        ],
+        "summary": "Run Now",
+        "description": "Queue a run of `job` now (admins only). It runs like a scheduled one: leased, retried.\n\nOne manual run per job at a time: while one is queued or running, it is returned. Sent\nwith an `Idempotency-Key` (a UUID per click), the request can be repeated, e.g. after its\nanswer was lost: it gets the same run, even once that run has finished.",
+        "operationId": "run_now",
+        "parameters": [
+          {
+            "name": "job",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/JobName"
+            }
+          },
+          {
+            "name": "idempotency-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "A UUID per click",
+              "title": "Idempotency-Key"
+            },
+            "description": "A UUID per click"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunProgress"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "jobs"
+        ],
+        "summary": "List Runs",
+        "description": "The job's runs, newest first (admins only): failures, retries, who ran when.\n\nA full page means older runs may follow: ask again with `before` the last one's ID.",
+        "operationId": "list_runs",
+        "parameters": [
+          {
+            "name": "job",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/JobName"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/JobStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "trigger",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/RunTrigger"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Trigger"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Before"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RunHistoryEntry"
+                  },
+                  "title": "Response List Runs"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/jobs/{job}/runs/active": {
+      "get": {
+        "tags": [
+          "jobs"
+        ],
+        "summary": "Read Active Run",
+        "description": "The job's run under way, scheduled or manual, if any: the job's page follows it.",
+        "operationId": "read_active_run",
+        "parameters": [
+          {
+            "name": "job",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/JobName"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RunProgress"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Read Active Run"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/jobs/{job}/runs/summary": {
+      "get": {
+        "tags": [
+          "jobs"
+        ],
+        "summary": "Read Run Summary",
+        "description": "How the job's runs ended lately (admins only): for the run health tiles and overview.\n\nCounts for the last 24 hours, the last 7 days, and each of the last 7 calendar days in\n`timezone` (the client's, an IANA name).\n\nRuns count by when they finished. \"Failed\" means failed for good: a run waiting for its\nretry has not finished yet.",
+        "operationId": "read_run_summary",
+        "parameters": [
+          {
+            "name": "job",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/JobName"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "examples": [
+                "Europe/Berlin"
+              ],
+              "title": "Timezone"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunSummary"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/jobs/{job}/runs/{run_id}": {
+      "get": {
+        "tags": [
+          "jobs"
+        ],
+        "summary": "Read Run",
+        "description": "A run's progress (admins only), e.g. of one they queued.",
+        "operationId": "read_run",
+        "parameters": [
+          {
+            "name": "job",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/JobName"
+            }
+          },
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunProgress"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such run"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/feeds": {
+      "get": {
+        "tags": [
+          "feeds"
+        ],
+        "summary": "List Feeds",
+        "description": "Every Feed by name (admins only), with its state: which Feeds work, and why not.\n\n`sources` counts the Sources its latest versions came from, as `/sources?feed=` lists them;\n`has_sources` says whether it may be deleted.",
+        "operationId": "list_feeds",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/FeedRead"
+                  },
+                  "type": "array",
+                  "title": "Response List Feeds"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "feeds"
+        ],
+        "summary": "Add Feed",
+        "description": "Add a Feed (admins only): the next scrape reads it. Its slug comes from its name.\n\nThe kind must be one InfraSales reads; its Lister checks the settings. Adding is audited.",
+        "operationId": "add_feed",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedRead"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A Feed has that address already"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/feeds/{feed_id}": {
+      "delete": {
+        "tags": [
+          "feeds"
+        ],
+        "summary": "Delete Feed",
+        "description": "Delete a Feed that has collected no Sources yet (admins only), e.g. one added by mistake.\n\nA Feed with Sources stays: the catalog keeps where each Source came from. Deleting is audited.",
+        "operationId": "delete_feed",
+        "parameters": [
+          {
+            "name": "feed_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Feed Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "404": {
+            "description": "No Feed has that ID"
+          },
+          "409": {
+            "description": "The Feed has collected Sources"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/feeds/suggest": {
+      "post": {
+        "tags": [
+          "feeds"
+        ],
+        "summary": "Suggest Feed",
+        "description": "Suggest the Feed to add for a site (admins only): its feed, else its sitemap.\n\nLooks at the page's feed links, usual feed paths and the sitemaps robots.txt names,\nobeying robots.txt and pausing between requests, for at most 20 seconds. Nothing is stored.",
+        "operationId": "suggest_feed",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuggestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Suggestion"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The address is not allowed or not readable, or offers no Feed"
+          },
+          "504": {
+            "description": "The site did not answer in time"
+          }
+        }
+      }
+    },
+    "/api/feeds/overlap": {
+      "get": {
+        "tags": [
+          "feeds"
+        ],
+        "summary": "Read Feed Overlap",
+        "description": "Which Feeds list the same documents (admins only): each Feed's own share, the top pairs.\n\nSummed over the Source Collection runs that finished in the last `days` days (at most the\nnewest 1000), in listings: an address counts once in each run that lists it.",
+        "operationId": "read_feed_overlap",
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 90,
+              "minimum": 1,
+              "default": 14,
+              "title": "Days"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedOverlapReport"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sources": {
+      "get": {
+        "tags": [
+          "sources"
+        ],
+        "summary": "List Sources",
+        "description": "The collected Sources, newest change first (admins only), filtered.\n\nEach is listed by its latest version, or by the one `run` wrote. `feed` and `category` may\nbe given several times; `q` matches the title or the address; `since` and `until` bound when\nthe listed version was fetched (its last change). A full page means older ones may follow:\nask again with `before` the last one's `version.id`.",
+        "operationId": "list_sources",
+        "parameters": [
+          {
+            "name": "feed",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 64
+              },
+              "maxItems": 100,
+              "description": "Feeds' slugs: the Sources listed by a version filed under one of them",
+              "title": "Feed"
+            },
+            "description": "Feeds' slugs: the Sources listed by a version filed under one of them"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/FeedCategory"
+              },
+              "description": "The Sources listed by a version whose Feed is of one of these categories",
+              "title": "Category"
+            },
+            "description": "The Sources listed by a version whose Feed is of one of these categories"
+          },
+          {
+            "name": "run",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Run"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "The listed version was fetched then or later",
+              "title": "Since"
+            },
+            "description": "The listed version was fetched then or later"
+          },
+          {
+            "name": "until",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "The listed version was fetched before then",
+              "title": "Until"
+            },
+            "description": "The listed version was fetched before then"
+          },
+          {
+            "name": "changed",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "True: more than one committed version; false: exactly one",
+              "title": "Changed"
+            },
+            "description": "True: more than one committed version; false: exactly one"
+          },
+          {
+            "name": "partial",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "The listed version is partial (a paywall), or is not",
+              "title": "Partial"
+            },
+            "description": "The listed version is partial (a paywall), or is not"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Before"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SourceListed"
+                  },
+                  "title": "Response List Sources"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sources/count": {
+      "get": {
+        "tags": [
+          "sources"
+        ],
+        "summary": "Count Sources",
+        "description": "How many Sources `GET /api/sources` lists with the same filters, every page (admins only).",
+        "operationId": "count_sources",
+        "parameters": [
+          {
+            "name": "feed",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 64
+              },
+              "maxItems": 100,
+              "description": "Feeds' slugs: the Sources listed by a version filed under one of them",
+              "title": "Feed"
+            },
+            "description": "Feeds' slugs: the Sources listed by a version filed under one of them"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/FeedCategory"
+              },
+              "description": "The Sources listed by a version whose Feed is of one of these categories",
+              "title": "Category"
+            },
+            "description": "The Sources listed by a version whose Feed is of one of these categories"
+          },
+          {
+            "name": "run",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Run"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "The listed version was fetched then or later",
+              "title": "Since"
+            },
+            "description": "The listed version was fetched then or later"
+          },
+          {
+            "name": "until",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "The listed version was fetched before then",
+              "title": "Until"
+            },
+            "description": "The listed version was fetched before then"
+          },
+          {
+            "name": "changed",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "True: more than one committed version; false: exactly one",
+              "title": "Changed"
+            },
+            "description": "True: more than one committed version; false: exactly one"
+          },
+          {
+            "name": "partial",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "The listed version is partial (a paywall), or is not",
+              "title": "Partial"
+            },
+            "description": "The listed version is partial (a paywall), or is not"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceCount"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sources/{source_id}": {
+      "get": {
+        "tags": [
+          "sources"
+        ],
+        "summary": "Read Source",
+        "description": "A Source and its versions, newest first (admins only).",
+        "operationId": "read_source",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Source Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such Source, or no such version of it"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sources/{source_id}/versions/{number}": {
+      "get": {
+        "tags": [
+          "sources"
+        ],
+        "summary": "Read Version Text",
+        "description": "What version `number` of the Source said, as its extractor read it (admins only).",
+        "operationId": "read_version_text",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Source Id"
+            }
+          },
+          {
+            "name": "number",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VersionText"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such Source, or no such version of it"
+          },
+          "410": {
+            "description": "The version's files are no longer in the sink"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sources/{source_id}/versions/{number}/raw": {
+      "get": {
+        "tags": [
+          "sources"
+        ],
+        "summary": "Download Raw Version",
+        "description": "Version `number` of the Source as fetched (HTML, PDF, \u2026), as a download (admins only).",
+        "operationId": "download_raw_version",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Source Id"
+            }
+          },
+          {
+            "name": "number",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/octet-stream": {}
+            }
+          },
+          "404": {
+            "description": "No such Source, or no such version of it"
+          },
+          "410": {
+            "description": "The version's files are no longer in the sink"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/forecast/municipalities": {
+      "get": {
+        "tags": [
+          "forecast"
+        ],
+        "summary": "Read Ranking",
+        "description": "The municipalities most likely to put a heat network's construction out to tender first.\n\nScored by the active model on its latest day, in a region if asked (an AGS prefix). No\nday yet: the model has not run since it was activated.",
+        "operationId": "read_ranking",
+        "parameters": [
+          {
+            "name": "region",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{0,8}$",
+              "description": "An AGS prefix: 08 Baden-W\u00fcrttemberg, 082 Regierungsbezirk Karlsruhe, \u2026",
+              "default": "",
+              "title": "Region"
+            },
+            "description": "An AGS prefix: 08 Baden-W\u00fcrttemberg, 082 Regierungsbezirk Karlsruhe, \u2026"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 500,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ranking"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/forecast/municipalities/{ags}": {
+      "get": {
+        "tags": [
+          "forecast"
+        ],
+        "summary": "Read Municipality",
+        "description": "A municipality's forecast file: score, rank, reasons, the features and evidence behind it.",
+        "operationId": "read_municipality",
+        "parameters": [
+          {
+            "name": "ags",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ags"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MunicipalityForecast"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such municipality"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/forecast/models": {
+      "get": {
+        "tags": [
+          "forecast"
+        ],
+        "summary": "List Models",
+        "description": "Every version of the forecast model, newest first, with its backtest (admins only).",
+        "operationId": "list_models",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ModelRead"
+                  },
+                  "type": "array",
+                  "title": "Response List Models"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/forecast/models/{model_id}/activate": {
+      "post": {
+        "tags": [
+          "forecast"
+        ],
+        "summary": "Activate Model",
+        "description": "Serve the forecast with this model (admins only): a forecast run is queued at once.",
+        "operationId": "activate_model",
+        "parameters": [
+          {
+            "name": "model_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Model Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such model"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/company/opportunities": {
+      "get": {
+        "tags": [
+          "company"
+        ],
+        "summary": "List Opportunities",
+        "description": "The company's best chances: open tenders in reach, then municipalities expected to tender.",
+        "operationId": "list_opportunities",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OpportunityRead"
+                  },
+                  "title": "Response List Opportunities"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/company": {
+      "get": {
+        "tags": [
+          "company"
+        ],
+        "summary": "Read Profile",
+        "description": "The company's profile: the names it wins under, the work it does, its sites.",
+        "operationId": "read_profile",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileRead"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "company"
+        ],
+        "summary": "Update Profile",
+        "operationId": "update_profile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/company/sites": {
+      "post": {
+        "tags": [
+          "company"
+        ],
+        "summary": "Add Site",
+        "operationId": "add_site",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SiteCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/company/sites/{site_id}": {
+      "delete": {
+        "tags": [
+          "company"
+        ],
+        "summary": "Delete Site",
+        "operationId": "delete_site",
+        "parameters": [
+          {
+            "name": "site_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Site Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "404": {
+            "description": "No such site"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/company/bids": {
+      "post": {
+        "tags": [
+          "company"
+        ],
+        "summary": "Import Bids",
+        "description": "Import the company's own bids as CSV: all of them, or none and the errors why.\n\nColumns: ref, title, submitted_on, outcome (won, lost, pending, withdrawn), and if known\nbuyer_name, value_eur, rank, offers, winning_value_eur. With `own_model`, they calibrate the\ncompany's own chances (Modell B).",
+        "operationId": "import_bids",
+        "parameters": [
+          {
+            "name": "own_model",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true,
+              "title": "Own Model"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "text/csv": {
+              "schema": {
+                "type": "string",
+                "description": "ref,title,submitted_on,outcome,\u2026",
+                "title": "Text"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BidsImported"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "A row could not be read"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Address": {
+        "type": "string",
+        "maxLength": 2048
+      },
+      "AiSettingsRead": {
+        "properties": {
+          "connections": {
+            "items": {
+              "$ref": "#/components/schemas/ConnectionRead"
+            },
+            "type": "array",
+            "title": "Connections"
+          },
+          "models": {
+            "$ref": "#/components/schemas/ModelsRead"
+          },
+          "keys_storable": {
+            "type": "boolean",
+            "title": "Keys Storable"
+          }
+        },
+        "type": "object",
+        "required": [
+          "connections",
+          "models",
+          "keys_storable"
+        ],
+        "title": "AiSettingsRead"
+      },
+      "AuditEventRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "actor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/Outcome"
+          },
+          "target": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target"
+          },
+          "details": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JSONValue-Output"
+            },
+            "type": "object",
+            "title": "Details"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "created_at",
+          "actor",
+          "action",
+          "outcome",
+          "target",
+          "details"
+        ],
+        "title": "AuditEventRead",
+        "description": "An audit event as admins see it: without the client network."
+      },
+      "BidsImported": {
+        "properties": {
+          "new": {
+            "type": "integer",
+            "title": "New"
+          },
+          "updated": {
+            "type": "integer",
+            "title": "Updated"
+          },
+          "errors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Errors"
+          }
+        },
+        "type": "object",
+        "required": [
+          "new",
+          "updated",
+          "errors"
+        ],
+        "title": "BidsImported"
+      },
+      "BucketCounts": {
+        "properties": {
+          "succeeded": {
+            "type": "integer",
+            "title": "Succeeded"
+          },
+          "failed": {
+            "type": "integer",
+            "title": "Failed"
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Start"
+          }
+        },
+        "type": "object",
+        "required": [
+          "succeeded",
+          "failed",
+          "start"
+        ],
+        "title": "BucketCounts"
+      },
+      "ChatModel": {
+        "properties": {
+          "provider": {
+            "$ref": "#/components/schemas/ChatProvider"
+          },
+          "model": {
+            "type": "string",
+            "pattern": "^([\\w.:/@~+-]{1,200})?$",
+            "title": "Model",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "provider"
+        ],
+        "title": "ChatModel"
+      },
+      "ChatProvider": {
+        "anyOf": [
+          {
+            "type": "string",
+            "const": "mock"
+          },
+          {
+            "$ref": "#/components/schemas/Provider"
+          }
+        ]
+      },
+      "ConfigEntryRead": {
+        "properties": {
+          "key": {
+            "$ref": "#/components/schemas/ConfigKey"
+          },
+          "value": {
+            "$ref": "#/components/schemas/Schedule"
+          },
+          "revision": {
+            "type": "integer",
+            "title": "Revision"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "next_run_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Run At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "value",
+          "revision",
+          "updated_at",
+          "next_run_at"
+        ],
+        "title": "ConfigEntryRead"
+      },
+      "ConfigKey": {
+        "type": "string",
+        "enum": [
+          "scrape_schedule",
+          "forecast_schedule"
+        ],
+        "title": "ConfigKey"
+      },
+      "ConnectionRead": {
+        "properties": {
+          "provider": {
+            "$ref": "#/components/schemas/Provider"
+          },
+          "key": {
+            "$ref": "#/components/schemas/KeyState"
+          },
+          "revision": {
+            "type": "integer",
+            "title": "Revision"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "provider",
+          "key",
+          "revision",
+          "updated_at"
+        ],
+        "title": "ConnectionRead"
+      },
+      "ConnectionWrite": {
+        "properties": {
+          "api_key": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "password",
+                "writeOnly": true
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Api Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "api_key"
+        ],
+        "title": "ConnectionWrite"
+      },
+      "DayCounts": {
+        "properties": {
+          "succeeded": {
+            "type": "integer",
+            "title": "Succeeded"
+          },
+          "failed": {
+            "type": "integer",
+            "title": "Failed"
+          },
+          "day": {
+            "type": "string",
+            "format": "date",
+            "title": "Day"
+          }
+        },
+        "type": "object",
+        "required": [
+          "succeeded",
+          "failed",
+          "day"
+        ],
+        "title": "DayCounts"
+      },
+      "EmbeddingModel": {
+        "properties": {
+          "provider": {
+            "$ref": "#/components/schemas/Provider"
+          },
+          "model": {
+            "$ref": "#/components/schemas/ModelId"
+          }
+        },
+        "type": "object",
+        "required": [
+          "provider",
+          "model"
+        ],
+        "title": "EmbeddingModel"
+      },
+      "EveryHours": {
+        "type": "integer",
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          8,
+          12
+        ]
+      },
+      "FailedFeed": {
+        "properties": {
+          "feed": {
+            "type": "string",
+            "title": "Feed"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feed",
+          "reason"
+        ],
+        "title": "FailedFeed"
+      },
+      "FeatureValue": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "value": {
+            "type": "number",
+            "title": "Value"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "value"
+        ],
+        "title": "FeatureValue"
+      },
+      "FeedCategory": {
+        "type": "string",
+        "enum": [
+          "press",
+          "municipality",
+          "utility",
+          "procurement",
+          "authority"
+        ],
+        "title": "FeedCategory",
+        "description": "Who publishes what a Feed lists: the Feeds and Sources pages filter and group by it."
+      },
+      "FeedCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/FeedKind"
+          },
+          "url": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "category": {
+            "$ref": "#/components/schemas/FeedCategory",
+            "description": "What the Feed is",
+            "default": "press"
+          },
+          "settings": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JSONValue-Input"
+            },
+            "type": "object",
+            "title": "Settings",
+            "description": "What the kind's Lister needs"
+          },
+          "extractor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extractor",
+            "description": "Reads every document of the Feed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "kind",
+          "url"
+        ],
+        "title": "FeedCreate",
+        "description": "A Feed to add; its slug is derived from its name."
+      },
+      "FeedKind": {
+        "type": "string",
+        "enum": [
+          "rss",
+          "sitemap"
+        ],
+        "title": "FeedKind",
+        "description": "How a Feed's new items are listed: one Lister per kind (`infrasales.feeds.kinds`)."
+      },
+      "FeedOutcome": {
+        "properties": {
+          "feed": {
+            "type": "string",
+            "title": "Feed"
+          },
+          "items": {
+            "type": "integer",
+            "title": "Items"
+          },
+          "new": {
+            "type": "integer",
+            "title": "New"
+          },
+          "unchanged": {
+            "type": "integer",
+            "title": "Unchanged"
+          },
+          "known": {
+            "type": "integer",
+            "title": "Known"
+          },
+          "seen": {
+            "type": "integer",
+            "title": "Seen"
+          },
+          "failed": {
+            "type": "integer",
+            "title": "Failed"
+          },
+          "unread": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unread"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "out_of_time": {
+            "type": "boolean",
+            "title": "Out Of Time"
+          },
+          "seconds": {
+            "type": "number",
+            "title": "Seconds"
+          },
+          "overlap": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FeedOverlap"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "walled": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Walled",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "feed",
+          "items",
+          "new",
+          "unchanged",
+          "known",
+          "seen",
+          "failed",
+          "unread",
+          "reason",
+          "out_of_time",
+          "seconds"
+        ],
+        "title": "FeedOutcome",
+        "description": "How a Source Collection run read one Feed (`scrape.FeedOutcome`, as stored)."
+      },
+      "FeedOverlap": {
+        "properties": {
+          "own": {
+            "type": "integer",
+            "title": "Own"
+          },
+          "shared": {
+            "type": "integer",
+            "title": "Shared"
+          },
+          "listed_with": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Listed With"
+          },
+          "filed_under": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Filed Under"
+          }
+        },
+        "type": "object",
+        "required": [
+          "own",
+          "shared",
+          "listed_with",
+          "filed_under"
+        ],
+        "title": "FeedOverlap",
+        "description": "Which of a Feed's addresses other Feeds list too (`scrape.FeedOverlap`, as stored)."
+      },
+      "FeedOverlapReport": {
+        "properties": {
+          "days": {
+            "type": "integer",
+            "title": "Days"
+          },
+          "runs": {
+            "type": "integer",
+            "title": "Runs"
+          },
+          "feeds": {
+            "items": {
+              "$ref": "#/components/schemas/FeedShare"
+            },
+            "type": "array",
+            "title": "Feeds"
+          },
+          "pairs": {
+            "items": {
+              "$ref": "#/components/schemas/FeedPair"
+            },
+            "type": "array",
+            "title": "Pairs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "days",
+          "runs",
+          "feeds",
+          "pairs"
+        ],
+        "title": "FeedOverlapReport",
+        "description": "Which Feeds list the same documents, over the runs counted."
+      },
+      "FeedPair": {
+        "properties": {
+          "feed": {
+            "type": "string",
+            "title": "Feed"
+          },
+          "other": {
+            "type": "string",
+            "title": "Other"
+          },
+          "listings": {
+            "type": "integer",
+            "title": "Listings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feed",
+          "other",
+          "listings"
+        ],
+        "title": "FeedPair",
+        "description": "Two Feeds listing the same addresses."
+      },
+      "FeedRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/FeedKind"
+          },
+          "category": {
+            "$ref": "#/components/schemas/FeedCategory"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "settings": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JSONValue-Output"
+            },
+            "type": "object",
+            "title": "Settings"
+          },
+          "fetcher": {
+            "$ref": "#/components/schemas/FetcherName"
+          },
+          "extractor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extractor"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "state": {
+            "$ref": "#/components/schemas/FeedState"
+          },
+          "last_error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Error"
+          },
+          "last_scraped_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Scraped At"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "has_sources": {
+            "type": "boolean",
+            "title": "Has Sources"
+          },
+          "sources": {
+            "type": "integer",
+            "title": "Sources"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "kind",
+          "category",
+          "url",
+          "settings",
+          "fetcher",
+          "extractor",
+          "enabled",
+          "state",
+          "last_error",
+          "last_scraped_at",
+          "created_at",
+          "has_sources",
+          "sources"
+        ],
+        "title": "FeedRead"
+      },
+      "FeedRef": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "name"
+        ],
+        "title": "FeedRef",
+        "description": "The Feed a version was filed under."
+      },
+      "FeedShare": {
+        "properties": {
+          "feed": {
+            "type": "string",
+            "title": "Feed"
+          },
+          "runs": {
+            "type": "integer",
+            "title": "Runs"
+          },
+          "own": {
+            "type": "integer",
+            "title": "Own"
+          },
+          "shared": {
+            "type": "integer",
+            "title": "Shared"
+          },
+          "own_share": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Own Share"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feed",
+          "runs",
+          "own",
+          "shared",
+          "own_share"
+        ],
+        "title": "FeedShare",
+        "description": "How much of what a Feed listed only it lists."
+      },
+      "FeedState": {
+        "type": "string",
+        "enum": [
+          "ok",
+          "failing",
+          "blocked"
+        ],
+        "title": "FeedState"
+      },
+      "FeedUnderway": {
+        "properties": {
+          "feed": {
+            "type": "string",
+            "title": "Feed"
+          },
+          "items": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Items"
+          },
+          "done": {
+            "type": "integer",
+            "title": "Done"
+          },
+          "new": {
+            "type": "integer",
+            "title": "New"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feed",
+          "items",
+          "done",
+          "new"
+        ],
+        "title": "FeedUnderway",
+        "description": "The Feed a running Source Collection reads now (`scrape.Underway`, as reported)."
+      },
+      "FetcherName": {
+        "type": "string",
+        "enum": [
+          "http"
+        ],
+        "title": "FetcherName",
+        "description": "The fetchers a Feed may name; another needs an audited admin change (ADR 03 \u00a76)."
+      },
+      "FormRead": {
+        "properties": {
+          "basis": {
+            "type": "string",
+            "title": "Basis"
+          },
+          "tenders": {
+            "type": "integer",
+            "title": "Tenders"
+          },
+          "procedure": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Procedure"
+          },
+          "procedure_share": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Procedure Share"
+          },
+          "lots_median": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lots Median"
+          },
+          "framework_share": {
+            "type": "number",
+            "title": "Framework Share"
+          },
+          "price_only_share": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Only Share"
+          },
+          "duration_months_median": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Months Median"
+          },
+          "value_eur_median": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value Eur Median"
+          },
+          "offers_median": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Offers Median"
+          }
+        },
+        "type": "object",
+        "required": [
+          "basis",
+          "tenders",
+          "procedure",
+          "procedure_share",
+          "lots_median",
+          "framework_share",
+          "price_only_share",
+          "duration_months_median",
+          "value_eur_median",
+          "offers_median"
+        ],
+        "title": "FormRead"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "JSONValue-Input": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "items": {
+              "$ref": "#/components/schemas/JSONValue-Input"
+            },
+            "type": "array"
+          },
+          {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JSONValue-Input"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "JSONValue-Output": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "items": {
+              "$ref": "#/components/schemas/JSONValue-Output"
+            },
+            "type": "array"
+          },
+          {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JSONValue-Output"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "JobName": {
+        "type": "string",
+        "enum": [
+          "scrape",
+          "forecast"
+        ],
+        "title": "JobName"
+      },
+      "JobStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "running",
+          "succeeded",
+          "failed"
+        ],
+        "title": "JobStatus"
+      },
+      "KeyState": {
+        "type": "string",
+        "enum": [
+          "set",
+          "unset",
+          "unreadable"
+        ],
+        "title": "KeyState"
+      },
+      "ModelId": {
+        "type": "string",
+        "pattern": "^[\\w.:/@~+-]{1,200}$"
+      },
+      "ModelKind": {
+        "type": "string",
+        "enum": [
+          "heuristic",
+          "logistic",
+          "choice"
+        ],
+        "title": "ModelKind"
+      },
+      "ModelOption": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "ModelOption"
+      },
+      "ModelRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/ModelKind"
+          },
+          "horizon_months": {
+            "type": "integer",
+            "title": "Horizon Months"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active"
+          },
+          "trained_until": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trained Until"
+          },
+          "trained_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trained At"
+          },
+          "trained_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trained By"
+          },
+          "metrics": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JSONValue-Output"
+            },
+            "type": "object",
+            "title": "Metrics"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "version",
+          "kind",
+          "horizon_months",
+          "active",
+          "trained_until",
+          "trained_at",
+          "trained_by",
+          "metrics",
+          "created_at"
+        ],
+        "title": "ModelRead"
+      },
+      "ModelSummary": {
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/ModelKind"
+          },
+          "horizon_months": {
+            "type": "integer",
+            "title": "Horizon Months"
+          },
+          "calibrated": {
+            "type": "boolean",
+            "title": "Calibrated"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version",
+          "kind",
+          "horizon_months",
+          "calibrated"
+        ],
+        "title": "ModelSummary"
+      },
+      "Models": {
+        "properties": {
+          "chat": {
+            "$ref": "#/components/schemas/ChatModel"
+          },
+          "embedding": {
+            "$ref": "#/components/schemas/EmbeddingModel"
+          }
+        },
+        "type": "object",
+        "required": [
+          "chat",
+          "embedding"
+        ],
+        "title": "Models"
+      },
+      "ModelsRead": {
+        "properties": {
+          "chat": {
+            "$ref": "#/components/schemas/ChatModel"
+          },
+          "embedding": {
+            "$ref": "#/components/schemas/EmbeddingModel"
+          },
+          "revision": {
+            "type": "integer",
+            "title": "Revision"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "chat",
+          "embedding",
+          "revision",
+          "updated_at"
+        ],
+        "title": "ModelsRead"
+      },
+      "MunicipalityForecast": {
+        "properties": {
+          "ags": {
+            "type": "string",
+            "title": "Ags"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "population": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Population"
+          },
+          "area_km2": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Area Km2"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "as_of": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "As Of"
+          },
+          "rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rank"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score"
+          },
+          "reasons": {
+            "items": {
+              "$ref": "#/components/schemas/ReasonRead"
+            },
+            "type": "array",
+            "title": "Reasons"
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureValue"
+            },
+            "type": "array",
+            "title": "Features"
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/ScorePoint"
+            },
+            "type": "array",
+            "title": "History"
+          },
+          "signals": {
+            "items": {
+              "$ref": "#/components/schemas/SignalRead"
+            },
+            "type": "array",
+            "title": "Signals"
+          },
+          "tenders": {
+            "items": {
+              "$ref": "#/components/schemas/TenderRead"
+            },
+            "type": "array",
+            "title": "Tenders"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ags",
+          "name",
+          "population",
+          "area_km2",
+          "model",
+          "as_of",
+          "rank",
+          "total",
+          "score",
+          "reasons",
+          "features",
+          "history",
+          "signals",
+          "tenders"
+        ],
+        "title": "MunicipalityForecast"
+      },
+      "OpportunityRead": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "tender_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tender Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "municipality_ags": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Municipality Ags"
+          },
+          "municipality": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Municipality"
+          },
+          "buyer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Buyer"
+          },
+          "distance_km": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance Km"
+          },
+          "win_chance": {
+            "type": "number",
+            "title": "Win Chance"
+          },
+          "tender_chance": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tender Chance"
+          },
+          "forecast_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Forecast Rank"
+          },
+          "deadline_on": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deadline On"
+          },
+          "value_eur": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value Eur"
+          },
+          "expected_offers": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Offers"
+          },
+          "form": {
+            "$ref": "#/components/schemas/FormRead"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Reasons"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "tender_id",
+          "title",
+          "municipality_ags",
+          "municipality",
+          "buyer",
+          "distance_km",
+          "win_chance",
+          "tender_chance",
+          "forecast_rank",
+          "deadline_on",
+          "value_eur",
+          "expected_offers",
+          "form",
+          "reasons"
+        ],
+        "title": "OpportunityRead"
+      },
+      "Outcome": {
+        "type": "string",
+        "enum": [
+          "success",
+          "failure"
+        ],
+        "title": "Outcome"
+      },
+      "ProfileRead": {
+        "properties": {
+          "names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Names"
+          },
+          "kinds": {
+            "items": {
+              "$ref": "#/components/schemas/TenderKind"
+            },
+            "type": "array",
+            "title": "Kinds"
+          },
+          "min_value_eur": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Value Eur"
+          },
+          "max_value_eur": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Value Eur"
+          },
+          "sites": {
+            "items": {
+              "$ref": "#/components/schemas/SiteRead"
+            },
+            "type": "array",
+            "title": "Sites"
+          }
+        },
+        "type": "object",
+        "required": [
+          "names",
+          "kinds",
+          "min_value_eur",
+          "max_value_eur",
+          "sites"
+        ],
+        "title": "ProfileRead"
+      },
+      "ProfileUpdate": {
+        "properties": {
+          "names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Names"
+          },
+          "kinds": {
+            "items": {
+              "$ref": "#/components/schemas/TenderKind"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Kinds"
+          },
+          "min_value_eur": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Value Eur"
+          },
+          "max_value_eur": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Value Eur"
+          }
+        },
+        "type": "object",
+        "required": [
+          "names",
+          "kinds"
+        ],
+        "title": "ProfileUpdate"
+      },
+      "Provider": {
+        "type": "string",
+        "enum": [
+          "openrouter"
+        ],
+        "title": "Provider"
+      },
+      "Purpose": {
+        "type": "string",
+        "enum": [
+          "chat",
+          "embedding"
+        ],
+        "title": "Purpose"
+      },
+      "RankedMunicipality": {
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "title": "Rank"
+          },
+          "ags": {
+            "type": "string",
+            "title": "Ags"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "population": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Population"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score"
+          },
+          "reasons": {
+            "items": {
+              "$ref": "#/components/schemas/ReasonRead"
+            },
+            "type": "array",
+            "title": "Reasons"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rank",
+          "ags",
+          "name",
+          "population",
+          "score",
+          "reasons"
+        ],
+        "title": "RankedMunicipality"
+      },
+      "Ranking": {
+        "properties": {
+          "model": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "as_of": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "As Of"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RankedMunicipality"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model",
+          "as_of",
+          "total",
+          "items"
+        ],
+        "title": "Ranking"
+      },
+      "ReasonRead": {
+        "properties": {
+          "feature": {
+            "type": "string",
+            "title": "Feature"
+          },
+          "value": {
+            "type": "number",
+            "title": "Value"
+          },
+          "effect": {
+            "type": "number",
+            "title": "Effect"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature",
+          "value",
+          "effect"
+        ],
+        "title": "ReasonRead"
+      },
+      "Role": {
+        "type": "string",
+        "enum": [
+          "viewer",
+          "admin"
+        ],
+        "title": "Role"
+      },
+      "RunActivity": {
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Start"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time",
+            "title": "End"
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "hour",
+              "day"
+            ],
+            "title": "Unit"
+          },
+          "buckets": {
+            "items": {
+              "$ref": "#/components/schemas/BucketCounts"
+            },
+            "type": "array",
+            "title": "Buckets"
+          }
+        },
+        "type": "object",
+        "required": [
+          "start",
+          "end",
+          "unit",
+          "buckets"
+        ],
+        "title": "RunActivity",
+        "description": "How the runs scheduled from `start` until `end` ended, an hour or a day at a time.\n\nHours for up to 2 days, else calendar days: oldest first. Runs that have not ended yet\ncount in neither."
+      },
+      "RunCounts": {
+        "properties": {
+          "succeeded": {
+            "type": "integer",
+            "title": "Succeeded"
+          },
+          "failed": {
+            "type": "integer",
+            "title": "Failed"
+          }
+        },
+        "type": "object",
+        "required": [
+          "succeeded",
+          "failed"
+        ],
+        "title": "RunCounts",
+        "description": "Runs that ended, by how: succeeded, or failed for good (retries used up)."
+      },
+      "RunHistoryEntry": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "job": {
+            "type": "string",
+            "title": "Job"
+          },
+          "trigger": {
+            "$ref": "#/components/schemas/RunTrigger"
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "scheduled_for": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Scheduled For"
+          },
+          "attempts": {
+            "type": "integer",
+            "title": "Attempts"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "langfuse_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Langfuse Url"
+          },
+          "max_attempts": {
+            "type": "integer",
+            "title": "Max Attempts"
+          },
+          "progress": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SourceCollectionProgress"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "triggered_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Triggered By"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SourceCollectionResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "job",
+          "trigger",
+          "status",
+          "scheduled_for",
+          "attempts",
+          "finished_at",
+          "error",
+          "max_attempts",
+          "triggered_by",
+          "result"
+        ],
+        "title": "RunHistoryEntry",
+        "description": "A run in the run history."
+      },
+      "RunProgress": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "job": {
+            "type": "string",
+            "title": "Job"
+          },
+          "trigger": {
+            "$ref": "#/components/schemas/RunTrigger"
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "scheduled_for": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Scheduled For"
+          },
+          "attempts": {
+            "type": "integer",
+            "title": "Attempts"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "langfuse_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Langfuse Url"
+          },
+          "max_attempts": {
+            "type": "integer",
+            "title": "Max Attempts"
+          },
+          "progress": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SourceCollectionProgress"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "job",
+          "trigger",
+          "status",
+          "scheduled_for",
+          "attempts",
+          "finished_at",
+          "error",
+          "max_attempts"
+        ],
+        "title": "RunProgress",
+        "description": "A run as \"Run now\" follows it: where to look into it, how often tried, how far it got."
+      },
+      "RunSummary": {
+        "properties": {
+          "last_24h": {
+            "$ref": "#/components/schemas/RunCounts"
+          },
+          "last_7d": {
+            "$ref": "#/components/schemas/RunCounts"
+          },
+          "days": {
+            "items": {
+              "$ref": "#/components/schemas/DayCounts"
+            },
+            "type": "array",
+            "title": "Days"
+          }
+        },
+        "type": "object",
+        "required": [
+          "last_24h",
+          "last_7d",
+          "days"
+        ],
+        "title": "RunSummary",
+        "description": "How a job's runs went lately, counted by when they finished."
+      },
+      "RunTrigger": {
+        "type": "string",
+        "enum": [
+          "schedule",
+          "manual",
+          "follow_up"
+        ],
+        "title": "RunTrigger"
+      },
+      "Schedule": {
+        "properties": {
+          "days": {
+            "items": {
+              "$ref": "#/components/schemas/Weekday"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Days"
+          },
+          "time": {
+            "type": "string",
+            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+            "title": "Time",
+            "examples": [
+              "08:00"
+            ]
+          },
+          "timezone": {
+            "type": "string",
+            "title": "Timezone",
+            "examples": [
+              "Europe/Berlin"
+            ]
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled",
+            "default": true
+          },
+          "every_hours": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EveryHours"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "days",
+          "time",
+          "timezone"
+        ],
+        "title": "Schedule",
+        "description": "When a job runs: on these weekdays, at this local time (daily means all seven days).\n\nWith `every_hours`, it also runs every that many hours after the time, until the day ends:\n`00:00` every 3 hours is 00:00, 03:00, ..., 21:00 (like systemd's `00/3` or cron's `0 */3`)."
+      },
+      "ScorePoint": {
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score"
+          }
+        },
+        "type": "object",
+        "required": [
+          "as_of",
+          "score"
+        ],
+        "title": "ScorePoint"
+      },
+      "SessionInfo": {
+        "properties": {
+          "user": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "provider": {
+            "type": "string",
+            "enum": [
+              "basic",
+              "oidc"
+            ],
+            "title": "Provider"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user",
+          "provider"
+        ],
+        "title": "SessionInfo"
+      },
+      "SignalKind": {
+        "type": "string",
+        "enum": [
+          "heat_plan_started",
+          "heat_plan_adopted",
+          "feasibility_study",
+          "council_decision",
+          "funding_granted",
+          "roadmap_published",
+          "heat_company_founded",
+          "job_posting",
+          "heat_source_project",
+          "budget_allocated",
+          "gas_concession_ends"
+        ],
+        "title": "SignalKind",
+        "description": "What a signal tells about a municipality's way to a heat network (ADR 06 \u00a77)."
+      },
+      "SignalRead": {
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/SignalKind"
+          },
+          "occurred_on": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Occurred On"
+          },
+          "available_on": {
+            "type": "string",
+            "format": "date",
+            "title": "Available On"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "occurred_on",
+          "available_on",
+          "note",
+          "url"
+        ],
+        "title": "SignalRead"
+      },
+      "SiteCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "post_code": {
+            "type": "string",
+            "pattern": "^\\d{5}$",
+            "title": "Post Code"
+          },
+          "max_distance_km": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 1000.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Distance Km"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "post_code"
+        ],
+        "title": "SiteCreate"
+      },
+      "SiteRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "post_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Post Code"
+          },
+          "municipality_ags": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Municipality Ags"
+          },
+          "max_distance_km": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Distance Km"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "post_code",
+          "municipality_ags",
+          "max_distance_km"
+        ],
+        "title": "SiteRead"
+      },
+      "SourceCollectionProgress": {
+        "properties": {
+          "feeds_total": {
+            "type": "integer",
+            "title": "Feeds Total"
+          },
+          "feeds_done": {
+            "type": "integer",
+            "title": "Feeds Done"
+          },
+          "versions_new": {
+            "type": "integer",
+            "title": "Versions New"
+          },
+          "current": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FeedUnderway"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "latest": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FeedOutcome"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "feeds_total",
+          "feeds_done",
+          "versions_new",
+          "current",
+          "latest"
+        ],
+        "title": "SourceCollectionProgress",
+        "description": "How far a running Source Collection got (`ScrapeResult.progress`, as reported)."
+      },
+      "SourceCollectionResult": {
+        "properties": {
+          "feeds_read": {
+            "type": "integer",
+            "title": "Feeds Read"
+          },
+          "versions_new": {
+            "type": "integer",
+            "title": "Versions New"
+          },
+          "versions_unchanged": {
+            "type": "integer",
+            "title": "Versions Unchanged"
+          },
+          "documents_failed": {
+            "type": "integer",
+            "title": "Documents Failed"
+          },
+          "failed_feeds": {
+            "items": {
+              "$ref": "#/components/schemas/FailedFeed"
+            },
+            "type": "array",
+            "title": "Failed Feeds"
+          },
+          "feeds": {
+            "items": {
+              "$ref": "#/components/schemas/FeedOutcome"
+            },
+            "type": "array",
+            "title": "Feeds",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "feeds_read",
+          "versions_new",
+          "versions_unchanged",
+          "documents_failed",
+          "failed_feeds"
+        ],
+        "title": "SourceCollectionResult",
+        "description": "What a finished Source Collection run did (`ScrapeResult`, as stored)."
+      },
+      "SourceCount": {
+        "properties": {
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "count"
+        ],
+        "title": "SourceCount",
+        "description": "How many Sources the filters match, every page together."
+      },
+      "SourceListed": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "first_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "First Seen At"
+          },
+          "last_checked_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Last Checked At"
+          },
+          "versions": {
+            "type": "integer",
+            "title": "Versions"
+          },
+          "version": {
+            "$ref": "#/components/schemas/VersionRead"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "url",
+          "first_seen_at",
+          "last_checked_at",
+          "versions",
+          "version"
+        ],
+        "title": "SourceListed",
+        "description": "A Source in the list, with the version it is listed by: its latest, or the run's."
+      },
+      "SourceRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "first_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "First Seen At"
+          },
+          "last_checked_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Last Checked At"
+          },
+          "versions": {
+            "items": {
+              "$ref": "#/components/schemas/VersionRead"
+            },
+            "type": "array",
+            "title": "Versions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "url",
+          "first_seen_at",
+          "last_checked_at",
+          "versions"
+        ],
+        "title": "SourceRead",
+        "description": "A Source with every committed version, newest first."
+      },
+      "SuggestRequest": {
+        "properties": {
+          "url": {
+            "$ref": "#/components/schemas/Address"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "title": "SuggestRequest"
+      },
+      "Suggestion": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/FeedKind"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "kind",
+          "url"
+        ],
+        "title": "Suggestion",
+        "description": "What to add for a site: its kind and the address of its feed or sitemap."
+      },
+      "TenderKind": {
+        "type": "string",
+        "enum": [
+          "planning",
+          "construction",
+          "supply",
+          "service"
+        ],
+        "title": "TenderKind"
+      },
+      "TenderOrigin": {
+        "type": "string",
+        "enum": [
+          "notice",
+          "preview",
+          "private_request"
+        ],
+        "title": "TenderOrigin",
+        "description": "Where a tender comes from (ADR 06 \u00a75)."
+      },
+      "TenderRead": {
+        "properties": {
+          "origin": {
+            "$ref": "#/components/schemas/TenderOrigin"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/TenderKind"
+          },
+          "status": {
+            "$ref": "#/components/schemas/TenderStatus"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "buyer_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Buyer Name"
+          },
+          "available_on": {
+            "type": "string",
+            "format": "date",
+            "title": "Available On"
+          },
+          "published_on": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published On"
+          },
+          "deadline_on": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deadline On"
+          },
+          "awarded_on": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Awarded On"
+          },
+          "contract_end_on": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contract End On"
+          },
+          "framework": {
+            "type": "boolean",
+            "title": "Framework"
+          },
+          "estimated_value_eur": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estimated Value Eur"
+          },
+          "award_value_eur": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Award Value Eur"
+          },
+          "offers": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Offers"
+          },
+          "winner_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Winner Name"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "origin",
+          "kind",
+          "status",
+          "title",
+          "buyer_name",
+          "available_on",
+          "published_on",
+          "deadline_on",
+          "awarded_on",
+          "contract_end_on",
+          "framework",
+          "estimated_value_eur",
+          "award_value_eur",
+          "offers",
+          "winner_name",
+          "url"
+        ],
+        "title": "TenderRead"
+      },
+      "TenderStatus": {
+        "type": "string",
+        "enum": [
+          "planned",
+          "published",
+          "awarded",
+          "cancelled"
+        ],
+        "title": "TenderStatus"
+      },
+      "User": {
+        "properties": {
+          "subject": {
+            "type": "string",
+            "title": "Subject"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          }
+        },
+        "type": "object",
+        "required": [
+          "subject",
+          "name",
+          "role"
+        ],
+        "title": "User"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VersionRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "number": {
+            "type": "integer",
+            "title": "Number"
+          },
+          "fetched_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Fetched At"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "feed": {
+            "$ref": "#/components/schemas/FeedRef"
+          },
+          "http_status": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Http Status"
+          },
+          "media_type": {
+            "type": "string",
+            "title": "Media Type"
+          },
+          "partial": {
+            "type": "boolean",
+            "title": "Partial"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At"
+          },
+          "extractor": {
+            "type": "string",
+            "title": "Extractor"
+          },
+          "extractor_version": {
+            "type": "string",
+            "title": "Extractor Version"
+          },
+          "superseded_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Superseded At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "number",
+          "fetched_at",
+          "run_id",
+          "feed",
+          "http_status",
+          "media_type",
+          "partial",
+          "title",
+          "published_at",
+          "extractor",
+          "extractor_version",
+          "superseded_at"
+        ],
+        "title": "VersionRead",
+        "description": "A committed Source Version: when and how it was got, and what it is called."
+      },
+      "VersionText": {
+        "properties": {
+          "number": {
+            "type": "integer",
+            "title": "Number"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "author": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Author"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "number",
+          "title",
+          "author",
+          "published_at",
+          "text"
+        ],
+        "title": "VersionText",
+        "description": "A version's text as its extractor read it (`extracted.json`)."
+      },
+      "Weekday": {
+        "type": "string",
+        "enum": [
+          "mon",
+          "tue",
+          "wed",
+          "thu",
+          "fri",
+          "sat",
+          "sun"
+        ],
+        "title": "Weekday"
+      }
+    }
+  }
+}

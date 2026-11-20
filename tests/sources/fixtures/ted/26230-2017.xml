@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?><TED_EXPORT xmlns="http://formex.publications.europa.eu/ted/schema/export/R2.0.9.S01.E01" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" VERSION="R2.0.9.S01.E01" xsi:schemaLocation="http://formex.publications.europa.eu/ted/schema/export/R2.0.9.S01.E01 TED_EXPORT.xsd" DOC_ID="026230-2017" EDITION="2017016">
+<TECHNICAL_SECTION>
+<RECEPTION_ID>17-025650-001</RECEPTION_ID>
+<DELETION_DATE>20170216</DELETION_DATE>
+<FORM_LG_LIST>DE </FORM_LG_LIST>
+<COMMENTS>From Convertor</COMMENTS>
+</TECHNICAL_SECTION>
+<LINKS_SECTION>
+<XML_SCHEMA_DEFINITION_LINK xlink:title="TED WEBSITE" xlink:href="http://ted.europa.eu" xlink:type="simple"/>
+<OFFICIAL_FORMS_LINK xlink:href="http://ted.europa.eu" xlink:type="simple"/>
+<FORMS_LABELS_LINK xlink:href="http://ted.europa.eu" xlink:type="simple"/>
+<ORIGINAL_CPV_LINK xlink:href="http://ted.europa.eu" xlink:type="simple"/>
+<ORIGINAL_NUTS_LINK xlink:href="http://ted.europa.eu" xlink:type="simple"/>
+</LINKS_SECTION>
+<CODED_DATA_SECTION>
+<REF_OJS>
+<COLL_OJ>S</COLL_OJ>
+<NO_OJ>16</NO_OJ>
+<DATE_PUB>20170124</DATE_PUB>
+</REF_OJS>
+<NOTICE_DATA>
+<NO_DOC_OJS>2017/S 016-026230</NO_DOC_OJS>
+<URI_LIST>
+<URI_DOC LG="DE">http://ted.europa.eu/udl?uri=TED:NOTICE:026230-2017:TEXT:DE:HTML</URI_DOC>
+</URI_LIST>
+<LG_ORIG>DE</LG_ORIG>
+<ISO_COUNTRY VALUE="DE"/>
+<IA_URL_GENERAL>http://wvi.ismaning.de/</IA_URL_GENERAL>
+<ORIGINAL_CPV CODE="45232140">District-heating mains construction work</ORIGINAL_CPV>
+<ORIGINAL_NUTS CODE="DE21H">München, Landkreis</ORIGINAL_NUTS>
+<CA_CE_NUTS CODE="DE21H">München, Landkreis</CA_CE_NUTS>
+<VALUES>
+<VALUE TYPE="ESTIMATED_TOTAL" CURRENCY="EUR">1750000.00</VALUE>
+</VALUES>
+</NOTICE_DATA>
+<CODIF_DATA>
+<DS_DATE_DISPATCH>20170119</DS_DATE_DISPATCH>
+<DT_DATE_FOR_SUBMISSION>20170216 12:00</DT_DATE_FOR_SUBMISSION>
+<AA_AUTHORITY_TYPE CODE="4">Utilities entity</AA_AUTHORITY_TYPE>
+<TD_DOCUMENT_TYPE CODE="3">Contract notice</TD_DOCUMENT_TYPE>
+<NC_CONTRACT_NATURE CODE="1">Works</NC_CONTRACT_NATURE>
+<PR_PROC CODE="4">Negotiated procedure</PR_PROC>
+<RP_REGULATION CODE="4">European Union</RP_REGULATION>
+<TY_TYPE_BID CODE="1">Submission for all lots</TY_TYPE_BID>
+<AC_AWARD_CRIT CODE="1">Lowest price</AC_AWARD_CRIT>
+<MA_MAIN_ACTIVITIES CODE="G">Production, transport and distribution of gas and heat</MA_MAIN_ACTIVITIES>
+<HEADING>01E05</HEADING>
+<INITIATOR>01</INITIATOR>
+<DIRECTIVE VALUE="2014/25/EU"/>
+</CODIF_DATA>
+</CODED_DATA_SECTION>
+<TRANSLATION_SECTION>
+<ML_TITLES>
+<ML_TI_DOC LG="BG">
+<TI_CY>Гepмaния</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Строителни и монтажни работи по общо изграждане на главни тръбопроводи от разпределителна мрежа за централно градско отопление</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="CS">
+<TI_CY>Německo</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Stavební práce vztahující se k přípojkám dálkového vytápění</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="DA">
+<TI_CY>Tyskland</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Anlægsarbejde: hovedledninger til fjernvarme</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="DE">
+<TI_CY>Deutschland</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Bau von Fernheizleitungsnetzen</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="EL">
+<TI_CY>Γερμανία</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Κατασκευαστικές εργασίες κεντρικών αγωγών τηλεθέρμανσης</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="EN">
+<TI_CY>Germany</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>District-heating mains construction work</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="ES">
+<TI_CY>Alemania</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Trabajos de construcción de redes de calefacción urbana</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="ET">
+<TI_CY>Saksamaa</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Lokaalküttevõrkude ehitustööd</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="FI">
+<TI_CY>Saksa</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Aluelämmitysjärjestelmän rakennustyöt</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="FR">
+<TI_CY>Allemagne</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Travaux de construction de réseaux de chauffage urbain</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="GA">
+<TI_CY>Ghearmáin, an</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>District-heating mains construction work</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="HR">
+<TI_CY>Njemačka</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Građevinski radovi na mreži gradskoga grijanja</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="HU">
+<TI_CY>Németország</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Távfűtés-fővezeték építése</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="IT">
+<TI_CY>Germania</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Lavori di costruzione di condotte per teleriscaldamento</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="LT">
+<TI_CY>Vokietija, VFR</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Centrinio šildymo vamzdžių tiesimo darbai</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="LV">
+<TI_CY>Vācija</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Centrālapkures maģistrāļu būvdarbi</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="MT">
+<TI_CY>il-Ġermanja</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Xogħol ta' kostruzzjoni ta' mejns għat-tisħin distrettwali</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="NL">
+<TI_CY>Duitsland</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Aanleggen van stadsverwarmingsleidingen</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="PL">
+<TI_CY>Niemcy</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Roboty budowlane w zakresie lokalnych sieci grzewczych</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="PT">
+<TI_CY>Alemanha</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Construção de condutas de aquecimento urbano</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="RO">
+<TI_CY>Germania</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Lucrări de construcţii de conducte de încălzire urbană</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="SK">
+<TI_CY>Nemecko</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Stavebné práce na hlavnom potrubí miestneho vykurovania</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="SL">
+<TI_CY>Nemčija</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Gradbena dela na omrežjih toplovodnega ogrevanja</P>
+</TI_TEXT>
+</ML_TI_DOC>
+<ML_TI_DOC LG="SV">
+<TI_CY>Tyskland</TI_CY>
+<TI_TOWN>Ismaning</TI_TOWN>
+<TI_TEXT>
+<P>Byggnadsarbeten: fjärrvärmehuvudledningar</P>
+</TI_TEXT>
+</ML_TI_DOC>
+</ML_TITLES>
+<ML_AA_NAMES>
+<AA_NAME LG="DE">WVI Wärmeversorgung Ismaning GmbH &amp; Co. KG</AA_NAME>
+</ML_AA_NAMES>
+</TRANSLATION_SECTION>
+<FORM_SECTION>
+<F05_2014 CATEGORY="ORIGINAL" FORM="F05" LG="DE">
+<CONTRACTING_BODY>
+<ADDRESS_CONTRACTING_BODY>
+<OFFICIALNAME>WVI Wärmeversorgung Ismaning GmbH &amp; Co. KG</OFFICIALNAME>
+<ADDRESS>Schloßstraße 2</ADDRESS>
+<TOWN>Ismaning</TOWN>
+<POSTAL_CODE>85737</POSTAL_CODE>
+<COUNTRY VALUE="DE"/>
+<CONTACT_POINT>WVI Wärmeversorgung Ismaning GmbH &amp; Co. KG</CONTACT_POINT>
+<E_MAIL>ssimmeth@wvi-ismaning.de</E_MAIL>
+<NUTS CODE="DE21H"/>
+<URL_GENERAL>http://wvi.ismaning.de/</URL_GENERAL>
+</ADDRESS_CONTRACTING_BODY>
+<DOCUMENT_RESTRICTED/>
+<URL_DOCUMENT>http://wvi.ismaning.de/</URL_DOCUMENT>
+<ADDRESS_FURTHER_INFO_IDEM/>
+<ADDRESS_PARTICIPATION_IDEM/>
+<CE_ACTIVITY VALUE="PRODUCTION_TRANSPORT_DISTRIBUTION_GAS_HEAT"/>
+</CONTRACTING_BODY>
+<OBJECT_CONTRACT>
+<TITLE>
+<P>Lieferung und betriebsfertige Verlegung eines kompletten Fernwämeverteilnetzes.</P>
+</TITLE>
+<CPV_MAIN>
+<CPV_CODE CODE="45232140"/>
+</CPV_MAIN>
+<TYPE_CONTRACT CTYPE="WORKS"/>
+<SHORT_DESCR>
+<P>Lieferung und Montage von kompletten betriebsfertigen, erdverlegten Fernwärmeleitungen im Kunststoffmantelrohrsystem einschließlich Gebäudeeintritten mit Erstabsperrungen (vorisolierte Rohrleitungen einschließlich aller Form- und Verbindungsstücke, Armaturen sowie Unterstützungsmaterial, Nachisolierung aller Verbindungsstellen). Erweiterung einer Leckwarn- und Ortungsanlage. Dokumentationen, Ausführung und Qualitätssicherung nach AGFW-FW 401. Tiefbau- und Straßenarbeiten nach allgemeinen Bedingungen der Straßenbauämter, des örtlichen Tiefbauamtes sowie allen zusätzlichen Vertragsbedingungen und Richtlinien (ZTV). Einschließlich aller Nebenarbeiten, zum Beispiel Umverlegung von Ver- und Entsorgungsleitungen, Abbruch und Wiederherstellung von Oberflächenbefestigungen, Einholen von Verkehrsgenehmigungen einschließlich Beschilderung.</P>
+<P>Beauftragung als EP-Vereinbarung. Die Bearbeitung kleinerer, kurzfristiger Abrufe (Hausanschlüsse etc.) wird gefordert.</P>
+</SHORT_DESCR>
+<VAL_ESTIMATED_TOTAL CURRENCY="EUR">1750000.00</VAL_ESTIMATED_TOTAL>
+<NO_LOT_DIVISION/>
+<OBJECT_DESCR ITEM="1">
+<NUTS CODE="DE21H"/>
+<MAIN_SITE>
+<P>Ismaning.</P>
+</MAIN_SITE>
+<SHORT_DESCR>
+<P>Lieferung und Montage von kompletten betriebsfertigen, erdverlegten Fernwärmeleitungen im Kunststoffmantelrohrsystem einschließlich Gebäudeeintritten mit Erstabsperrungen (vorisolierte Rohrleitungen einschließlich aller Form- und Verbindungsstücke, Armaturen sowie Unterstützungsmaterial, Nachisolierung aller Verbindungsstellen) mit den zugehörigen Tiefbauarbeiten vorrangig innerhalb des Ismaninger Gemeindegebietes in zum Teil enger Spartenlage.Erweiterung einer Leckwarn- und Ortungsanlage. Dokumentationen, Ausführung und Qualitätssicherung nach AGFW-FW 401. Tiefbau- und Straßenarbeiten nach allgemeinen Bedingungen der Straßenbauämter, des örtlichen Tiefbauamtes sowie allen zusätzlichen Vertragsbedingungen und Richtlinien (ZTV). Einschließlich aller Nebenarbeiten, zum Beispiel Umverlegung von Ver- und Entsorgungsleitungen, Abbruch und Wiederherstellung von Oberflächenbefestigungen, Einholen von Verkehrsgenehmigungen einschließlich Beschilderung.</P>
+<P>Beauftragung als EP-Vereinbarung. Die Bearbeitung kleinerer, kurzfristiger Abrufe (Hausanschlüsse etc.) wird gefordert.</P>
+<P>Mit dem Fernwärmenetz sind Leerrohre (Mikrodukts) für ein Lichtwellenleiternetz zu verlegen.</P>
+<P>Umfang der Arbeiten:</P>
+<P>— etwa 2 200 Trassenmeter Fernwärmeverteilleitung,</P>
+<P>— etwa 640 Trassenmeter Hausanschlussleitungen für Fernwärme in etwa 40 Hausanschlüssen ausgehend von der zu bauenden Verteilleitung,</P>
+<P>— etwa 25 zusätzliche Hausanschlüsse mit etwa 370 Trassenmetern Hausanschlussleitungen im bestehenden Fernwärmenetz der Ismaninger Gemeindegebietes </P>
+<P>jeweils mit den parallel geführten Mikrodukts des Lichtwellenleiternetzes.</P>
+</SHORT_DESCR>
+<AC_PRICE/>
+<VAL_OBJECT CURRENCY="EUR">1750000.00</VAL_OBJECT>
+<DATE_START>2017-04-18</DATE_START>
+<DATE_END>2018-03-15</DATE_END>
+<NO_RENEWAL/>
+<ACCEPTED_VARIANTS/>
+<NO_OPTIONS/>
+<NO_EU_PROGR_RELATED/>
+<INFO_ADD>
+<P>Das Vergabeverfahren erfolgt in zwei Stufen. In der Bewerbungsphase (Stufe 1) weisen die Bewerber ihre Eignung nach. In dieser Stufe 1 werden keine weiteren Unterlagen zur Verfügung gestellt.</P>
+<P>Die Aufforderung zur Abgabe eines Angebotes wird nach Prüfung der eingereichten Unterlagen (NACH dem 16.2.2017) verschickt.</P>
+</INFO_ADD>
+</OBJECT_DESCR>
+</OBJECT_CONTRACT>
+<LEFTI>
+<SUITABILITY>
+<P>a) Erklärung über wirtschaftliche Verknüpfungen mit anderen Unternehmen,</P>
+<P>b) Eintrag im Berufs- / Handelsregister,</P>
+<P>c) Verbindliche Nennung der Arbeitsgemeinschaftspartner (soweit vorhanden) sowie der Federführung.</P>
+<P>Erklärung, dass die Mitglieder einer Bietergemeinschaft gesamtschuldnerisch haften.</P>
+</SUITABILITY>
+<ECONOMIC_FINANCIAL_INFO>
+<P>a) Eigenerklärung über die in §123 und §124 GWB genannten Ausschlussgründe vom Verfahren,</P>
+<P>b) Bankerklärung oder Nachweis entsprechender Haftpflichtversicherungsdeckung (Deckungssumme und Versicherungsunternehmen),</P>
+<P>c) Vorlage von Bilanzen oder Bilanzauszügen der letzten 3 Geschäftsjahre,</P>
+<P>d) Erklärung über den Gesamtumsatz des Unternehmens der letzten 3 Geschäftsjahre,</P>
+<P>e) Erklärung über den Umsatz des Bewerbers im Fernwärmebau in den letzten drei Geschäftsjahren.</P>
+</ECONOMIC_FINANCIAL_INFO>
+<ECONOMIC_FINANCIAL_MIN_LEVEL>
+<P>In der Erklärung über den Umsatz des Bewerbers im Fernwärmebau in den letzten 3 Geschäftsjahren wird ein Mindestumsatz in jedem Geschäftsjahr über dem zweifachen geschätzten Auftragswert der angekündigten Maßnahme verlangt.</P>
+<P>In der Haftpflichtversicherung wird eine Deckungssumme von Mindestens 5 000 000 EUR für Sach- und Personenschäden als Mindeststandard angesehen.</P>
+</ECONOMIC_FINANCIAL_MIN_LEVEL>
+<TECHNICAL_PROFESSIONAL_INFO>
+<P>— Nachweis personeller und fachlicher Kapazitäten in einem Umfang, dass die Vergabestelle sicher beurteilen kann, dass der Bewerber innerhalb der angegebenen Projektdauer ohne Unterbrechungen die jeweils beauftragte Leistung erbringen kann. Beschreibung der technischen Ausrüstung. Bescheinigungen über die berufliche Befähigung, der für die Leistungen verantwortlichen Personen.</P>
+<P>— Die Bewerber müssen in den vergangenen 3 Jahren mindestens 3 Referenzprojekte vergleichbarer Größe bearbeitet haben. Bei diesen Projekten müssen sie alle hier geforderten Leistungen (Rohrbau KMR, Tiefbau, Spartenumlegung, Oberflächenwiederherstellung unbefestigt und unterschiedlich befestigt) erbracht haben. Die drei Referenzen sind detailliert in Bezug auf den Auftragsgegenstand zu beschreiben mit Angaben des Rechnungswertes, der Leistungszeit und der Auftraggeber. Zu den Referenzen sind Bestätigungen des AGs vorzulegen.</P>
+<P>— Nachweise und Zertifikate zu folgenden fachlichen Ausbildungen / Qualifikationen: DVGW-Zulassungen G1 und W1, AGFW FW 601, geprüfte Schweißer nach EN 287 Teil 1, Qualitätsanforderungen an den Schweißbetrieb nach AGFW FW 446 Teil 2, Ver- und Entsorgungsmanagement (Kontaminierung von Böden und Straßenbelag), anerkanntes Sicherheits-, Gesundheits- und Umweltmanagementsystem (SCC-Zertifikat, ASCA, OHSAS, oder gleichwertig).</P>
+<P>— Beschreibung der Maßnahmen des Unternehmens zur Gewährleistung der Qualität. Zertifizierung nach ISO EN 9001:2008 und ISO EN 9001:2000.</P>
+</TECHNICAL_PROFESSIONAL_INFO>
+<TECHNICAL_PROFESSIONAL_MIN_LEVEL>
+<P>Die technische Ausrüstung muss geeignet sein,  3 Tiefbaukolonnen für den Fernwärmenetzbau und drei Rohrbaukolonnen für den Fernwärmeleitungsbau auszustatten.</P>
+<P>Drei Referenzen müssen jeweils die Verlegung von mindestens 2 000 KMR Rohr in Fernwärmetrassen in jeweils einer Bausaison UND gleichzeitig den Bau von mindestens 30 Hausanschlüssen in der jeweils gleichen Bausaison im gleichen Projekt beinhalten und belegen. Fehlt bei einem der 3 Referenzprojekte nur eine der oben genannten Leistungsteile, so wird die Eignung verneint.</P>
+</TECHNICAL_PROFESSIONAL_MIN_LEVEL>
+<DEPOSIT_GUARANTEE_REQUIRED>
+<P>Einbehalte in Höhe von 5 % der Auftragssumme zur Sicherung der Vertragserfüllung, alternativ</P>
+<P>selbstschuldnerische unbefristete Vertragserfüllungsbürgschaft in Höhe von 5 %.</P>
+<P>3 % der Rechnungssumme Abzug von der Schlussrechungssumme als Sicherheit für Gewährleistungsmängel.</P>
+<P>Alternativ Ablösung über eine Bürgschaft wie vor.</P>
+</DEPOSIT_GUARANTEE_REQUIRED>
+<MAIN_FINANCING_CONDITION>
+<P>Gem. VOB/B sowie gesetzlicher Vorschriften. Teilzahlungen nach gesonderter Vereinbarung.</P>
+</MAIN_FINANCING_CONDITION>
+<LEGAL_FORM>
+<P>Personen- oder Kapitalgesellschaft, positive Nachweise nach III.1.1.</P>
+</LEGAL_FORM>
+<PERFORMANCE_STAFF_QUALIFICATION/>
+</LEFTI>
+<PROCEDURE>
+<PT_NEGOTIATED_WITH_PRIOR_CALL/>
+<NO_CONTRACT_COVERED_GPA/>
+<DATE_RECEIPT_TENDERS>2017-02-16</DATE_RECEIPT_TENDERS>
+<TIME_RECEIPT_TENDERS>12:00</TIME_RECEIPT_TENDERS>
+<DATE_DISPATCH_INVITATIONS>2017-02-20</DATE_DISPATCH_INVITATIONS>
+<LANGUAGES>
+<LANGUAGE VALUE="DE"/>
+</LANGUAGES>
+</PROCEDURE>
+<COMPLEMENTARY_INFO>
+<NO_RECURRENT_PROCUREMENT/>
+<INFO_ADD>
+<P>Das Vergabeverfahren erfolgt in zwei Stufen. Die Vergabestelle stellt in dieser Bewerbungsphase (Stufe 1) keine weiteren Unterlagen zum Projekt zur Verfügung.</P>
+<P>Die Bewerber reichen ihre Bewerbungen schriftlich bei der Vergabestelle ein. Die schriftliche Bewerbung ist in die Gliederung nach den Teilnahmebedingungen zu unterteilen.</P>
+<P>Nach dem 16.2.2017 erfolgt die Prüfung der eingereichten Bewerbungsunterlagen. Die Bewerber müssen bis zum Abgabetag ihre Bewerbungsunterlagen abgeben. Die Aufforderung zur Abgabe eines Angebotes wird nach Prüfung der eingereichten Unterlagen (NACH dem 16.2.2017) durch die Vergabestelle versandt.</P>
+<P>Die Auftragsvergabe steht unter dem Vorbehalt von öffentlichen Genehmigungen, der Zustimmung von Gremien des Auftraggebers sowie der wirtschaftlichen Vertretbarkeit der Beauftragung. Die wirtschaftliche Vertretbarkeit wird die Vergabestelle nach Vorliegen der Preisangebote feststellen.</P>
+</INFO_ADD>
+<ADDRESS_REVIEW_BODY>
+<OFFICIALNAME>Vergabekammer Südbayern</OFFICIALNAME>
+<ADDRESS>Regierung von Oberbayern, Bayerstr. 30</ADDRESS>
+<TOWN>München</TOWN>
+<POSTAL_CODE>80335</POSTAL_CODE>
+<COUNTRY VALUE="DE"/>
+<PHONE>+49 8921760</PHONE>
+</ADDRESS_REVIEW_BODY>
+<ADDRESS_REVIEW_INFO>
+<OFFICIALNAME>Vergabekammer Südbayern</OFFICIALNAME>
+<ADDRESS>Regierung von Oberbayern, Bayerstr. 30</ADDRESS>
+<TOWN>München</TOWN>
+<POSTAL_CODE>80335</POSTAL_CODE>
+<COUNTRY VALUE="DE"/>
+<PHONE>+49 8921760</PHONE>
+</ADDRESS_REVIEW_INFO>
+<DATE_DISPATCH_NOTICE>2017-01-19</DATE_DISPATCH_NOTICE>
+</COMPLEMENTARY_INFO>
+</F05_2014>
+</FORM_SECTION>
+</TED_EXPORT>

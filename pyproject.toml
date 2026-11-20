@@ -1,0 +1,169 @@
+[project]
+name = "infrasales"
+version = "0.1.0"
+description = "InfraSales"
+readme = "README.md"
+requires-python = ">=3.14"
+license = "LicenseRef-Proprietary"
+classifiers = ["Private :: Do Not Upload"]
+dependencies = [
+    "aiosqlite>=0.22.1",
+    "alembic>=1.20.0",
+    "authlib>=1.8.0",
+    "fastapi>=0.142.2",
+    "feedparser>=6.0.14",
+    "fsspec>=2026.9.0",
+    "httpx2>=2.13.1",
+    "itsdangerous>=2.2.0",
+    "jinja2>=3.1.6",
+    "joserfc>=1.7.5",
+    "langfuse>=4.17.0",
+    "lxml>=6.1.3",
+    "mrml>=0.2.4",
+    "numpy>=2.5.4",
+    "openai>=3.24.0",
+    "opentelemetry-exporter-otlp-proto-http>=1.45.0",
+    "opentelemetry-instrumentation-fastapi>=0.66b0",
+    "opentelemetry-instrumentation-logging>=0.66b0",
+    "opentelemetry-sdk>=1.45.0",
+    "protego>=0.7.0",
+    "psycopg[binary]>=3.3.6",
+    "pydantic-ai-slim>=2.54.0",
+    "pydantic-settings>=2.15.0",
+    "pypdf>=6.20.0",
+    "resvg-py>=0.5.0",
+    "sqlalchemy[asyncio]>=2.0.54",
+    "sqlite-vec>=0.1.9",
+    "sqlmodel>=0.0.47",
+    "structlog>=26.1.0",
+    "trafilatura>=2.3.1",
+    "tzdata>=2026.5",
+    "uvicorn>=0.54.0",
+]
+
+[project.scripts]
+infrasales = "infrasales.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.12.22,<0.14"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    { include-group = "lint" },
+    { include-group = "test" },
+    "pre-commit>=4.6.2",
+]
+lint = [
+    "pyright>=1.1.414",
+    "ruff>=0.16.10",
+    "types-lxml>=2026.2.16",
+]
+test = [
+    "anyio>=4.15.1",
+    "coverage>=7.16.2",
+    "pytest>=9.1.1",
+    "python-dotenv>=1.2.4",
+]
+
+[tool.uv]
+required-version = ">=0.12.22,<0.14"
+exclude-newer = "1 week"
+
+# ── Ruff ──
+[tool.ruff]
+line-length = 100
+extend-exclude = ["typings"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "COM812", # conflicts with the formatter
+    "CPY001", # no copyright headers
+    "D1",     # docstrings only where names and types don't explain behaviour
+    "TC001",  # annotations are introspected at runtime (FastAPI, Pydantic),
+    "TC002",  # so type-only imports stay regular imports
+    "TC003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"docs/**" = ["S101", "S105", "S106", "S603", "PLR2004"]
+"tests/**" = ["S101", "S105", "S106", "S603", "PLR2004"]
+"src/infrasales/cli.py" = ["PLC0415"]
+"src/infrasales/auth/provider.py" = ["PLC0415"]
+"src/infrasales/ai/model.py" = ["PLC0415"]
+"src/infrasales/mail/mailer.py" = ["PLC0415"]
+"src/infrasales/observability.py" = ["PLC0415"]
+"src/infrasales/core/telemetry.py" = ["PLC0415"]
+"src/infrasales/migrations/versions/*" = ["INP001", "E501"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+# ── Pyright ──
+[tool.pyright]
+include = ["src", "tests"]
+stubPath = "typings"
+pythonVersion = "3.14"
+venvPath = "."
+venv = ".venv"
+typeCheckingMode = "strict"
+deprecateTypingAliases = true
+reportCallInDefaultInitializer = "error"
+reportImplicitOverride = "error"
+reportImportCycles = "error"
+reportMissingModuleSource = "error"
+reportPropertyTypeMismatch = "error"
+reportUninitializedInstanceVariable = "error"
+reportUnnecessaryTypeIgnoreComment = "error"
+reportUnreachable = "error"
+reportUnusedCallResult = "none"
+
+# ── Tests ──
+[tool.pytest]
+minversion = "9.0"
+testpaths = ["tests"]
+strict = true
+addopts = ["-ra"]
+filterwarnings = [
+    "error",
+    # tld 0.13.2 (trafilatura's domain lookup) reads its list with codecs.open, deprecated in
+    # Python 3.14: as an error the list never loads, and trafilatura discards every page whose
+    # domain it looks up (www.gemeindetag.test), so extraction in tests would differ from production.
+    "ignore:codecs.open\\(\\) is deprecated:DeprecationWarning:tld.utils",
+]
+
+[tool.coverage.run]
+source = ["src/infrasales"]
+branch = true
+omit = ["*/infrasales/migrations/versions/*"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
+skip_covered = true
+exclude_also = ["raise AssertionError", "assert_never\\(", "if __name__ == .__main__.:"]
+
+# ── Alembic CLI ──
+[tool.alembic]
+script_location = "infrasales:migrations"
+file_template = "%%(rev)s_%%(slug)s"
+truncate_slug_length = 60
+
+[[tool.alembic.post_write_hooks]]
+name = "ruff-fix"
+type = "module"
+module = "ruff"
+options = "check --fix REVISION_SCRIPT_FILENAME"
+
+[[tool.alembic.post_write_hooks]]
+name = "ruff-format"
+type = "module"
+module = "ruff"
+options = "format REVISION_SCRIPT_FILENAME"

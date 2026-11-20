@@ -1,0 +1,71 @@
+# Production stack
+name: infrasales-prod
+
+x-app: &app
+  image: ${INFRASALES_IMAGE:-infrasales:local}
+  read_only: true
+  tmpfs: [/tmp]
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  restart: unless-stopped
+
+services:
+  migrate: # the schema owner: migrates, grants the other roles, exits
+    <<: *app
+    command: migrate
+    restart: "no"
+    secrets: [{ source: owner_database_url, target: database_url }]
+    environment:
+      DATABASE_APP_ROLE: ${DATABASE_APP_ROLE:-infrasales_app}
+      DATABASE_RETENTION_ROLE: ${DATABASE_RETENTION_ROLE:-infrasales_retention}
+      LOG_FORMAT: json
+    # depends_on: { postgres: { condition: service_healthy } } # with the database below
+
+  infrasales: # the API, the UI and the scheduler worker, in one process
+    <<: *app
+    env_file: profiles/prod.env
+    volumes: [sink:/data/sink] # consumers mount it read-only (:ro)
+    ports: ["127.0.0.1:8000:8000"] # behind a TLS-terminating reverse proxy
+    stop_grace_period: 45s # requests drain, a job finishes or is handed back, telemetry flushes
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  retention: # deletes expired data daily, with a role that can do little else
+    <<: *app
+    command: [prune, --every, 24h]
+    secrets: [{ source: retention_database_url, target: database_url }]
+    environment:
+      LOG_FORMAT: json
+      SINK__URI: file:///data/sink
+      RETENTION__AUDIT_DAYS: 180
+      RETENTION__JOB_RUN_DAYS: 90
+      RETENTION__SOURCE_DAYS: 365 # Source Versions, after they stopped being current
+    volumes: [sink:/data/sink]
+    healthcheck: { disable: true }
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  # A database on the same host instead of an external one: uncomment this service, the
+  # volume and secret below, and migrate's depends_on. Create the three roles as
+  # compose/postgres-init.sh does, with passwords of your own (and the URLs to match).
+  # postgres:
+  #   image: pgvector/pgvector:pg18@sha256:c29f30688a9ad961691bdf0ec1650717cc132a5814619d80f80463d6e4c42e47
+  #   environment:
+  #     POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+  #   secrets: [postgres_password]
+  #   volumes: [postgres:/var/lib/postgresql]
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U postgres"]
+  #     interval: 2s
+  #     timeout: 3s
+  #     retries: 30
+  #   restart: unless-stopped
+
+secrets:
+  owner_database_url: { file: secrets/owner_database_url }
+  retention_database_url: { file: secrets/retention_database_url }
+  # postgres_password: { file: secrets/postgres_password }
+
+volumes:
+  sink: # owned by the app's user (Dockerfile)
+  # postgres:
